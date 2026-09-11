@@ -12,15 +12,29 @@ social do Brasil. Gestores públicos precisam antecipar riscos, identificar regi
 e entender quais fatores mais impactam os resultados — não basta observar o indicador atual,
 é preciso prever e agir preventivamente.
 
-**Adaptação de escopo:** o enunciado original pede um modelo para prever se um *aluno* será
-alfabetizado. A camada Gold da Fase 2, no entanto, está agregada em **município × ano**
-(2021–2024, ~512 municípios) — não existe dado no nível de aluno individual disponível.
-O problema foi reformulado, preservando a essência (antecipar risco de não-alfabetização para
-apoiar decisão pública), para a granularidade real dos dados disponíveis: **prever se um
-município atingirá ou não a meta de alfabetização em um determinado ano**. Essa reformulação
-está diretamente alinhada às próprias perguntas de negócio do desafio ("quais municípios
-apresentam maior risco educacional", "como prever municípios que podem não atingir metas
-futuras").
+**Recorte do problema — por que município, não aluno:** o parágrafo de abertura do enunciado
+pede um modelo para prever se um *aluno* será alfabetizado. O restante do próprio documento,
+porém, aponta noutra direção: (1) exige que os dados venham exclusivamente da camada Gold
+construída na Fase 2, que é agregada em **município × ano** (2021–2024, ~512 municípios) — sem
+nenhum registro no nível de aluno; e (2) as perguntas de negócio que o desafio efetivamente
+lista como entregável são todas no nível municipal — *"quais municípios apresentam maior risco
+educacional"*, *"como prever municípios que podem não atingir metas futuras"*. O enunciado é
+internamente inconsistente entre sua frase de abertura (genérica, provavelmente reaproveitada
+de outras edições do desafio) e o que ele concretamente pede depois. Resolvemos essa
+inconsistência a favor do que é verificável: a granularidade da fonte de dados exigida e as
+perguntas de negócio explícitas.
+
+Há também um motivo estrutural, não apenas de escopo deste projeto: resultado individual de
+alfabetização por criança é dado protegido por sigilo educacional/LGPD — não existe base pública
+oficial no Brasil no nível de aluno para o Indicador Criança Alfabetizada. O próprio portal do
+MEC/INEP publica esse indicador agregado por município, UF e Brasil. Ou seja, a limitação não é
+de engenharia da Fase 2 — é da natureza do dado público disponível, e valeria para qualquer
+equipe que tentasse este desafio com dados reais.
+
+Por isso, o problema foi reformulado preservando a essência do desafio (antecipar risco de
+não-alfabetização para apoiar decisão pública), na granularidade real e verificável dos dados
+disponíveis: **prever se um município atingirá ou não a meta de alfabetização em um determinado
+ano**.
 
 ## Objetivo analítico
 
@@ -109,6 +123,16 @@ holdout temporal de 2024:
 A **Regressão Logística** foi escolhida: desempenho estatisticamente equivalente aos modelos
 mais complexos, com a vantagem de ser mais simples, rápida e interpretável (coeficientes
 diretamente relacionáveis ao SHAP) — preferência por parcimônia quando o desempenho empata.
+
+> **Nota técnica — reprodutibilidade:** todo o pipeline fixa `random_state=42` (split,
+> `RandomizedSearchCV`, modelos), mas os algoritmos usam `n_jobs=-1` para paralelizar o
+> treino. Como bibliotecas numéricas (BLAS/OpenMP) não somam ponto flutuante sempre na mesma
+> ordem entre execuções paralelas, rodar `python -m src.modeling.train` novamente pode gerar
+> métricas e importâncias de feature com variação na 3ª/4ª casa decimal (ex.: F1 0.893 vs.
+> 0.897) e pequenas trocas de posição entre UFs com importância muito próxima (ex.: MG/RJ).
+> O modelo selecionado e as conclusões de negócio (quais fatores mais importam, quais UFs
+> puxam para cada lado) são estáveis entre execuções — a reprodutibilidade é garantida no
+> nível das conclusões, não bit-a-bit nos números.
 
 ## Métricas de avaliação
 
@@ -237,4 +261,10 @@ tech-challenge-fase3/
 
 ## Vídeo executivo
 
-Pendente de gravação (roteiro disponível em `reports/roteiro_video_executivo.md`).
+Gravado — `reports/video_executivo.mp4` (132 MB). Roteiro em
+`reports/roteiro_video_executivo.md` e apresentação em `reports/apresentacao_executiva.pptx`.
+
+> O arquivo `.mp4` fica **só local** (listado em `.gitignore`, não vai pro Git): acima de 100 MB,
+> o GitHub recusa o push num repositório normal sem Git LFS. Para a entrega, subir o vídeo num
+> host externo (YouTube não listado, Google Drive) e linkar aqui, ou anexar separadamente na
+> plataforma de entrega do curso.
