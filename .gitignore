@@ -14,3 +14,4 @@ service-account*.json
 models/*.joblib
 mlruns/
 *.mp4
+reports/roteiro_video_executivo.md
