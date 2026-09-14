@@ -261,10 +261,7 @@ tech-challenge-fase3/
 
 ## Vídeo executivo
 
-Gravado — `reports/video_executivo.mp4` (132 MB). Roteiro em
+**[Download do vídeo executivo (.mp4, 132 MB)](https://github.com/jaoo2706/Tech-Challenge-3/releases/download/video-executivo/video_executivo.mp4)**
+— publicado como GitHub Release (o arquivo excede o limite de 100 MB do Git normal, então não fica
+versionado no repositório, só anexado ao release). Roteiro em
 `reports/roteiro_video_executivo.md` e apresentação em `reports/apresentacao_executiva.pptx`.
-
-> O arquivo `.mp4` fica **só local** (listado em `.gitignore`, não vai pro Git): acima de 100 MB,
-> o GitHub recusa o push num repositório normal sem Git LFS. Para a entrega, subir o vídeo num
-> host externo (YouTube não listado, Google Drive) e linkar aqui, ou anexar separadamente na
-> plataforma de entrega do curso.
